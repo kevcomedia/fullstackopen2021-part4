@@ -5,7 +5,14 @@ const app = require('./app')
 const mongoose = require('mongoose')
 
 const mongoUrl = config.MONGODB_URI
-mongoose.connect(mongoUrl)
+mongoose
+  .connect(mongoUrl)
+  .then(() => {
+    logger.info('Connected to MongoDB')
+  })
+  .catch((error) => {
+    logger.error('Cannot connect to MongoDB:', error.message)
+  })
 
 const server = http.createServer(app)
 server.listen(config.PORT, () => {
