@@ -85,3 +85,43 @@ describe('total likes', () => {
     expect(listHelper.totalLikes(blogs)).toBe(36)
   })
 })
+
+describe('favorite blog', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.favoriteBlog([])).toBe(null)
+  })
+
+  test('of list with one blog is the blog itself', () => {
+    expect(listHelper.favoriteBlog(listWithOneBlog)).toEqual({
+      title: 'React patterns',
+      author: 'Michael Chan',
+      likes: 7,
+    })
+  })
+
+  test('of list of blogs is the blog with most likes', () => {
+    expect(listHelper.favoriteBlog(blogs)).toEqual({
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 12,
+    })
+  })
+
+  test('of list of blogs with more than one top favorite is the first in the list', () => {
+    const blogsWithMultipleTop = [
+      {
+        title: 'Test blog',
+        author: 'Billy Smith',
+        url: 'https://billysblog.com/test-blog',
+        likes: 12,
+        __v: 0,
+      },
+      ...blogs,
+    ]
+    expect(listHelper.favoriteBlog(blogsWithMultipleTop)).toEqual({
+      title: 'Test blog',
+      author: 'Billy Smith',
+      likes: 12,
+    })
+  })
+})
