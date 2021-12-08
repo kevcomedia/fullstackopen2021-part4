@@ -162,3 +162,40 @@ describe('most blogs', () => {
     })
   })
 })
+
+describe('most likes', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.mostLikes([])).toBe(null)
+  })
+
+  test('of list with one blog is author name and blog likes', () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toEqual({
+      author: 'Michael Chan',
+      likes: 7,
+    })
+  })
+
+  test('of list of blogs is author with most likes', () => {
+    expect(listHelper.mostLikes(blogs)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
+    })
+  })
+
+  test('of list of blogs with multiple top bloggers is first author in list', () => {
+    const blogsWithMultipleTop = [
+      {
+        title: 'Test blog',
+        author: 'Michael Chan',
+        url: 'https://example.com/example-blog',
+        likes: 10,
+        __v: 0,
+      },
+      ...blogs,
+    ]
+    expect(listHelper.mostLikes(blogsWithMultipleTop)).toEqual({
+      author: 'Michael Chan',
+      likes: 17,
+    })
+  })
+})
