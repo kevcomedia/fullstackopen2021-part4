@@ -11,7 +11,7 @@ beforeEach(async () => {
   const initialBlogs = testHelper.blogs
   const promiseArray = initialBlogs.map((blog) => new Blog(blog).save())
   await Promise.all(promiseArray)
-}, 10000)
+}, 20000)
 
 test('blogs are returned as json', async () => {
   await api
