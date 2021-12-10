@@ -103,7 +103,7 @@ describe('deleting a blog', () => {
 
   test('blog is no longer in database', async () => {
     const blogsAtStart = await testHelper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
 
     await api.delete(`/api/blogs/${blogToDelete.id}`)
 
