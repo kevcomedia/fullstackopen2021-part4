@@ -93,6 +93,31 @@ test('api responds with 400 when "url" property is missing', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+describe('updating a blog', () => {
+  test('api responds with updated blog', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const blogToUpdate = blogsAtStart[blogsAtStart.length - 1]
+
+    const update = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 200,
+    }
+
+    const result = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(update)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await testHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart)
+    expect(blogsAtEnd).not.toContainEqual(blogToUpdate)
+
+    const blogsJson = blogsAtEnd.map((b) => JSON.parse(JSON.stringify(b)))
+    expect(blogsJson).toContainEqual(result)
+  })
+})
+
 describe('deleting a blog', () => {
   test('api responds with 204', async () => {
     const blogsAtStart = await testHelper.blogsInDb()
