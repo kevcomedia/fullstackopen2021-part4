@@ -93,6 +93,27 @@ test('api responds with 400 when "url" property is missing', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+describe('deleting a blog', () => {
+  test('api responds with 204', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+  })
+
+  test('blog is no longer in database', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`)
+
+    const blogsAtEnd = await testHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+
+    expect(blogsAtEnd).not.toContainEqual(blogToDelete)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
