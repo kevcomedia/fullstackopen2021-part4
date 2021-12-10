@@ -52,6 +52,21 @@ test('new blog posts are saved', async () => {
   expect(response.body).toMatchObject(newBlog)
 })
 
+test('new blog with no "likes" property defaults to 0 likes', async () => {
+  const newBlog = {
+    title: 'New Blog Testing',
+    author: 'blogtester',
+    url: 'https://example.com/new-blog-testing',
+  }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  expect(response.body.likes).toBeDefined()
+  expect(response.body.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
