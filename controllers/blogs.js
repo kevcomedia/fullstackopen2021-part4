@@ -17,6 +17,10 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
+blogsRouter.put('/:id', async (request, response, next) => {
+  response.send('blogsRouter PUT /:id')
+})
+
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     await Blog.findByIdAndRemove(request.params.id)
