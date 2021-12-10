@@ -67,6 +67,32 @@ test('new blog with no "likes" property defaults to 0 likes', async () => {
   expect(response.body.likes).toBe(0)
 })
 
+test('api responds with 400 when "title" property is missing', async () => {
+  const newBlog = {
+    author: 'blogtester',
+    url: 'https://example.com/new-blog-testing',
+    likes: 3,
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
+test('api responds with 400 when "url" property is missing', async () => {
+  const newBlog = {
+    title: 'New Blog Testing',
+    author: 'blogtester',
+    likes: 3,
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
