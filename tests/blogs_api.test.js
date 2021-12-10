@@ -33,6 +33,25 @@ test('blogs have a property "id" instead of "_id"', async () => {
   }
 })
 
+test('new blog posts are saved', async () => {
+  const newBlog = {
+    title: 'New Blog Testing',
+    author: 'blogtester',
+    url: 'https://example.com/new-blog-testing',
+    likes: 3,
+  }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAfterSaving = await testHelper.blogsInDb()
+  expect(blogsAfterSaving).toHaveLength(initialBlogs.length + 1)
+
+  expect(response.body).toMatchObject(newBlog)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
