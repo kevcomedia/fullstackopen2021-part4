@@ -116,6 +116,23 @@ describe('updating a blog', () => {
     const blogsJson = blogsAtEnd.map((b) => JSON.parse(JSON.stringify(b)))
     expect(blogsJson).toContainEqual(result)
   })
+
+  test('api responds with 400 when id is invalid', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const invalidUpdate = {
+      id: 'xyz',
+      title: 'test',
+      author: 'test author',
+      url: 'https://example.com/test-url',
+      likes: 100,
+    }
+    await api
+      .put(`/api/blogs/${invalidUpdate.id}`)
+      .send(invalidUpdate)
+      .expect(400)
+    const blogsAtEnd = await testHelper.blogsInDb()
+    expect(blogsAtEnd).toEqual(blogsAtStart)
+  })
 })
 
 describe('deleting a blog', () => {
