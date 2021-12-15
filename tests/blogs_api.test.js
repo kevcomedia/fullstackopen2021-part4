@@ -110,11 +110,10 @@ describe('updating a blog', () => {
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await testHelper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(blogsAtStart)
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
     expect(blogsAtEnd).not.toContainEqual(blogToUpdate)
 
-    const blogsJson = blogsAtEnd.map((b) => JSON.parse(JSON.stringify(b)))
-    expect(blogsJson).toContainEqual(result)
+    expect(result.body.likes).toBe(blogToUpdate.likes + 200)
   })
 
   test('api responds with 400 when id is invalid', async () => {
