@@ -98,8 +98,11 @@ describe('updating a blog', () => {
     const blogsAtStart = await testHelper.blogsInDb()
     const blogToUpdate = blogsAtStart[blogsAtStart.length - 1]
 
+    const { title, author, url } = blogToUpdate
     const update = {
-      ...blogToUpdate,
+      title,
+      author,
+      url,
       likes: blogToUpdate.likes + 200,
     }
 
