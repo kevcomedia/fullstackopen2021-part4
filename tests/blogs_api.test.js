@@ -132,36 +132,6 @@ describe('updating a blog', () => {
     const blogsAtEnd = await testHelper.blogsInDb()
     expect(blogsAtEnd).toEqual(blogsAtStart)
   })
-
-  test('api responds with 400 when "title" property is missing', async () => {
-    const blogsAtStart = await testHelper.blogsInDb()
-    const blogToUpdate = blogsAtStart[blogsAtStart.length - 1]
-
-    const update = {
-      ...blogToUpdate,
-      likes: blogToUpdate.likes + 200,
-    }
-    delete update.title
-
-    await api.put(`/api/blogs/${blogToUpdate.id}`).send(update).expect(400)
-    const blogsAtEnd = await testHelper.blogsInDb()
-    expect(blogsAtEnd).toEqual(blogsAtStart)
-  })
-
-  test('api responds with 400 when "url" property is missing', async () => {
-    const blogsAtStart = await testHelper.blogsInDb()
-    const blogToUpdate = blogsAtStart[blogsAtStart.length - 1]
-
-    const update = {
-      ...blogToUpdate,
-      likes: blogToUpdate.likes + 200,
-    }
-    delete update.url
-
-    await api.put(`/api/blogs/${blogToUpdate.id}`).send(update).expect(400)
-    const blogsAtEnd = await testHelper.blogsInDb()
-    expect(blogsAtEnd).toEqual(blogsAtStart)
-  })
 })
 
 describe('deleting a blog', () => {
