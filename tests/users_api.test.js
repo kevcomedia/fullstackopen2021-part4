@@ -14,6 +14,22 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 }, 20000)
 
+test('list all users', async () => {
+  const response = await api
+    .get('/api/users')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body).toHaveLength(initialUsers.length)
+
+  const expectedUsers = initialUsers.map(({ username, name, _id }) => ({
+    username,
+    name,
+    id: _id,
+  }))
+  expect(response.body).toMatchObject(expectedUsers)
+})
+
 describe('user creation', () => {
   test('new user is successfully created', async () => {
     const newUser = {
