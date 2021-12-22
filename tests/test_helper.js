@@ -65,8 +65,31 @@ const blogs = [
   },
 ]
 
+const users = [
+  {
+    _id: '61c2fad72da881244f4b487b',
+    username: 'root',
+    // plaintext is "secret"
+    passwordHash:
+      '$2y$10$LmZ9Z2ClgiBBxFd1fGwwaOjWASIu.RXbduSwXpDV9CT7UFDdr/bT.',
+    name: 'superuser',
+  },
+  {
+    _id: '61c2fc0c2da881244f4b487c',
+    username: 'mike',
+    // plaintext is "mike"
+    passwordHash:
+      '$2y$10$veFi379jtAlWyCkuqfYo5.jnxo637IhIJ4heUDurgar7OGAwvxzZW',
+    name: 'Mike Gomez',
+  },
+]
+
 const blogsInDb = async () => {
   return await Blog.find({})
 }
 
-module.exports = { listWithOneBlog, blogs, blogsInDb }
+const usersInDb = async () => {
+  return await User.find({})
+}
+
+module.exports = { listWithOneBlog, blogs, blogsInDb, users, usersInDb }
