@@ -4,7 +4,8 @@ const User = require('../models/user')
 
 usersRouter.get('/', async (request, response, next) => {
   try {
-    response.send('GET /api/users')
+    const users = await User.find({})
+    response.json(users)
   } catch (error) {
     next(error)
   }
