@@ -53,6 +53,21 @@ describe('user creation', () => {
     expect(response.body).not.toHaveProperty('password')
     expect(response.body).not.toHaveProperty('passwordHash')
   })
+
+  test('require a username', async () => {
+    const newUser = {
+      password: 'secret-password',
+      name: 'Billy Smith',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+  })
 })
 
 afterAll(() => {
