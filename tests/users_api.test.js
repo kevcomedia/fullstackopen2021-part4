@@ -115,6 +115,23 @@ describe('user creation', () => {
 
     expect(response.body).toHaveProperty('error')
   })
+
+  test('username must be unique', async () => {
+    const existingUser = initialUsers[1]
+    const newUser = {
+      username: existingUser.username,
+      password: 'secret-password',
+      name: 'Mike Jones',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+  })
 })
 
 afterAll(() => {
