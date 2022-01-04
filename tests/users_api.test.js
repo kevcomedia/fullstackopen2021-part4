@@ -55,6 +55,8 @@ describe('user creation', () => {
   })
 
   test('require a username', async () => {
+    const usersBeforeSaving = await testHelper.usersInDb()
+
     const newUser = {
       password: 'secret-password',
       name: 'Billy Smith',
@@ -67,9 +69,14 @@ describe('user creation', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toHaveProperty('error')
+
+    const usersAfterSaving = await testHelper.usersInDb()
+    expect(usersAfterSaving).toEqual(usersBeforeSaving)
   })
 
   test('require a password', async () => {
+    const usersBeforeSaving = await testHelper.usersInDb()
+
     const newUser = {
       username: 'billy',
       name: 'Billy Smith',
@@ -82,9 +89,14 @@ describe('user creation', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toHaveProperty('error')
+
+    const usersAfterSaving = await testHelper.usersInDb()
+    expect(usersAfterSaving).toEqual(usersBeforeSaving)
   })
 
   test('username must be at least 3 characters long', async () => {
+    const usersBeforeSaving = await testHelper.usersInDb()
+
     const newUser = {
       username: 'ab',
       password: 'secret-password',
@@ -98,9 +110,14 @@ describe('user creation', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toHaveProperty('error')
+
+    const usersAfterSaving = await testHelper.usersInDb()
+    expect(usersAfterSaving).toEqual(usersBeforeSaving)
   })
 
   test('password must be at least 3 characters long', async () => {
+    const usersBeforeSaving = await testHelper.usersInDb()
+
     const newUser = {
       username: 'billy',
       password: '12',
@@ -114,9 +131,14 @@ describe('user creation', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toHaveProperty('error')
+
+    const usersAfterSaving = await testHelper.usersInDb()
+    expect(usersAfterSaving).toEqual(usersBeforeSaving)
   })
 
   test('username must be unique', async () => {
+    const usersBeforeSaving = await testHelper.usersInDb()
+
     const existingUser = initialUsers[1]
     const newUser = {
       username: existingUser.username,
@@ -131,6 +153,9 @@ describe('user creation', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body).toHaveProperty('error')
+
+    const usersAfterSaving = await testHelper.usersInDb()
+    expect(usersAfterSaving).toEqual(usersBeforeSaving)
   })
 })
 
