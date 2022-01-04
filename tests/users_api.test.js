@@ -83,6 +83,38 @@ describe('user creation', () => {
 
     expect(response.body).toHaveProperty('error')
   })
+
+  test('username must be at least 3 characters long', async () => {
+    const newUser = {
+      username: 'ab',
+      password: 'secret-password',
+      name: 'Billy Smith',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+  })
+
+  test('password must be at least 3 characters long', async () => {
+    const newUser = {
+      username: 'billy',
+      password: '12',
+      name: 'Billy Smith',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+  })
 })
 
 afterAll(() => {
