@@ -14,13 +14,10 @@ usersRouter.get('/', async (request, response, next) => {
 usersRouter.post('/', async (request, response, next) => {
   const { username, password, name } = request.body
 
-  if (!password) {
-    return response.status(400).json({ error: 'password is required' })
-  }
-  if (password.length < 3) {
-    return response
-      .status(400)
-      .json({ error: 'password must be at least 3 characters long' })
+  if (!password || password.length < 3) {
+    return response.status(400).json({
+      error: 'password is required and must be at least 3 characters long',
+    })
   }
 
   try {
