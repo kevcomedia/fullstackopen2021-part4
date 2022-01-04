@@ -68,6 +68,21 @@ describe('user creation', () => {
 
     expect(response.body).toHaveProperty('error')
   })
+
+  test('require a password', async () => {
+    const newUser = {
+      username: 'billy',
+      name: 'Billy Smith',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+  })
 })
 
 afterAll(() => {
