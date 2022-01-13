@@ -72,7 +72,7 @@ const users = [
     username: 'root',
     // plaintext is "secret"
     passwordHash:
-      '$2y$10$LmZ9Z2ClgiBBxFd1fGwwaOjWASIu.RXbduSwXpDV9CT7UFDdr/bT.',
+      '$2b$10$/JSN6LIlO6GdtjrDhVBNK.WEIJdh4hMAkqDhWYyaDv6mrW6YVqofi',
     name: 'superuser',
   },
   {
@@ -80,7 +80,7 @@ const users = [
     username: 'mike',
     // plaintext is "mike"
     passwordHash:
-      '$2y$10$veFi379jtAlWyCkuqfYo5.jnxo637IhIJ4heUDurgar7OGAwvxzZW',
+      '$2b$10$EhssWxRzGBpHyLq3Ni.gUu1BshrjwjXZU7jfXdtgN0t5dm61RiV9y',
     name: 'Mike Gomez',
   },
 ]
