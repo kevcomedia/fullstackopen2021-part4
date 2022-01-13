@@ -33,20 +33,31 @@ describe('user login', () => {
     expect(response.body).toHaveProperty('name', user.name)
   })
 
-  test('incorrect username', async () => {
-    const login = {
-      username: 'bob',
-      password: 'mike',
-    }
+  describe('invalid logins', () => {
+    const invalidLogins = [
+      {
+        name: 'incorrect username',
+        login: { username: 'invalid-username', password: 'mike' },
+      },
+      {
+        name: 'incorrect password',
+        login: { username: 'mike', password: 'invalid-password' },
+      },
+      { name: 'missing username', login: { password: 'missing-username' } },
+      { name: 'missing password', login: { username: 'missing-password' } },
+    ]
+    invalidLogins.forEach(({ name, login }) => {
+      test(name, async () => {
+        const response = await api
+          .post('/api/login')
+          .send(login)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
 
-    const response = await api
-      .post('/api/login')
-      .send(login)
-      .expect(401)
-      .expect('Content-Type', /application\/json/)
-
-    expect(response.body).toHaveProperty('error')
-    expect(response.body).not.toHaveProperty('token')
+        expect(response.body).toHaveProperty('error')
+        expect(response.body).not.toHaveProperty('token')
+      })
+    })
   })
 })
 
