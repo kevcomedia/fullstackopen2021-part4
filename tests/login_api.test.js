@@ -32,6 +32,22 @@ describe('user login', () => {
     expect(response.body).toHaveProperty('username', user.username)
     expect(response.body).toHaveProperty('name', user.name)
   })
+
+  test('incorrect username', async () => {
+    const login = {
+      username: 'bob',
+      password: 'mike',
+    }
+
+    const response = await api
+      .post('/api/login')
+      .send(login)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toHaveProperty('error')
+    expect(response.body).not.toHaveProperty('token')
+  })
 })
 
 afterAll(() => {
