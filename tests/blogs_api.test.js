@@ -33,64 +33,78 @@ test('blogs have a property "id" instead of "_id"', async () => {
   }
 })
 
-test('new blog posts are saved', async () => {
-  const newBlog = {
-    title: 'New Blog Testing',
-    author: 'blogtester',
-    url: 'https://example.com/new-blog-testing',
-    likes: 3,
-  }
-  const response = await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+describe('new blog posts', () => {
+  let bearer
+  beforeEach(async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: 'mike', password: 'mike' })
+    bearer = `Bearer ${loginResponse.body.token}`
+  })
 
-  const blogsAfterSaving = await testHelper.blogsInDb()
-  expect(blogsAfterSaving).toHaveLength(initialBlogs.length + 1)
+  test('new blog posts are saved', async () => {
+    const newBlog = {
+      title: 'New Blog Testing',
+      author: 'blogtester',
+      url: 'https://example.com/new-blog-testing',
+      likes: 3,
+    }
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', bearer)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
 
-  expect(response.body).toMatchObject(newBlog)
-})
+    const blogsAfterSaving = await testHelper.blogsInDb()
+    expect(blogsAfterSaving).toHaveLength(initialBlogs.length + 1)
 
-test('new blog with no "likes" property defaults to 0 likes', async () => {
-  const newBlog = {
-    title: 'New Blog Testing',
-    author: 'blogtester',
-    url: 'https://example.com/new-blog-testing',
-  }
-  const response = await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
-  expect(response.body.likes).toBeDefined()
-  expect(response.body.likes).toBe(0)
-})
+    expect(response.body).toMatchObject(newBlog)
+  })
 
-test('api responds with 400 when "title" property is missing', async () => {
-  const newBlog = {
-    author: 'blogtester',
-    url: 'https://example.com/new-blog-testing',
-    likes: 3,
-  }
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-    .expect('Content-Type', /application\/json/)
-})
+  test('new blog with no "likes" property defaults to 0 likes', async () => {
+    const newBlog = {
+      title: 'New Blog Testing',
+      author: 'blogtester',
+      url: 'https://example.com/new-blog-testing',
+    }
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', bearer)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    expect(response.body.likes).toBeDefined()
+    expect(response.body.likes).toBe(0)
+  })
 
-test('api responds with 400 when "url" property is missing', async () => {
-  const newBlog = {
-    title: 'New Blog Testing',
-    author: 'blogtester',
-    likes: 3,
-  }
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-    .expect('Content-Type', /application\/json/)
+  test('api responds with 400 when "title" property is missing', async () => {
+    const newBlog = {
+      author: 'blogtester',
+      url: 'https://example.com/new-blog-testing',
+      likes: 3,
+    }
+    await api
+      .post('/api/blogs')
+      .set('Authorization', bearer)
+      .send(newBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('api responds with 400 when "url" property is missing', async () => {
+    const newBlog = {
+      title: 'New Blog Testing',
+      author: 'blogtester',
+      likes: 3,
+    }
+    await api
+      .post('/api/blogs')
+      .set('Authorization', bearer)
+      .send(newBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
 describe('updating a blog', () => {
