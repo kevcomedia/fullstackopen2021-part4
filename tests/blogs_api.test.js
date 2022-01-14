@@ -82,6 +82,24 @@ describe('new blog posts', () => {
     expect(response.body.likes).toBe(0)
   })
 
+  test('api responds with 401 when Authorization is missing', async () => {
+    const newBlog = {
+      title: 'New Blog Testing',
+      author: 'blogtester',
+      url: 'https://example.com/new-blog-testing',
+      likes: 3,
+    }
+    await api
+      .post('/api/blogs')
+      // no Authorization header set
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterSaving = await testHelper.blogsInDb()
+    expect(blogsAfterSaving).toHaveLength(initialBlogs.length)
+  })
+
   test('api responds with 400 when "title" property is missing', async () => {
     const newBlog = {
       author: 'blogtester',
