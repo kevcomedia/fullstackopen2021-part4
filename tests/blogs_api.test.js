@@ -217,6 +217,38 @@ describe('deleting a blog', () => {
     const blogsAtEndIds = blogsAtEnd.map((blog) => blog.id.toString())
     expect(blogsAtEndIds).not.toContain(blogToDelete._id.toString())
   })
+
+  test('api responds with 401 when Authorization is missing', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const blogToDelete = initialBlogs[1] // blog submitted by the test user
+
+    await api
+      .delete(`/api/blogs/${blogToDelete._id}`)
+      // no Authorization header set
+      .expect(401)
+
+    const blogsAtEnd = await testHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+    const blogsAtEndIds = blogsAtEnd.map((blog) => blog.id.toString())
+    expect(blogsAtEndIds).toContain(blogToDelete._id.toString())
+  })
+
+  test('api responds with 401 when Authorization is invalid', async () => {
+    const blogsAtStart = await testHelper.blogsInDb()
+    const blogToDelete = initialBlogs[1] // blog submitted by the test user
+
+    await api
+      .delete(`/api/blogs/${blogToDelete._id}`)
+      .set('Authorization', 'invalid-token')
+      .expect(401)
+
+    const blogsAtEnd = await testHelper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+    const blogsAtEndIds = blogsAtEnd.map((blog) => blog.id.toString())
+    expect(blogsAtEndIds).toContain(blogToDelete._id.toString())
+  })
 })
 
 afterAll(() => {
