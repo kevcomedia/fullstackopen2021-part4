@@ -192,11 +192,24 @@ describe('updating a blog', () => {
 })
 
 describe('deleting a blog', () => {
+  let bearer
+  const user = initialUsers[1]
+
+  beforeEach(async () => {
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: user.username, password: 'mike' })
+    bearer = `Bearer ${loginResponse.body.token}`
+  })
+
   test('api responds with 204', async () => {
     const blogsAtStart = await testHelper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', bearer)
+      .expect(204)
   })
 
   test('blog is no longer in database', async () => {
