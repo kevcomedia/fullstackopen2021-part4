@@ -7,6 +7,7 @@ const Blog = require('../models/blog')
 const api = supertest(app)
 
 const initialBlogs = testHelper.blogs
+const initialUsers = testHelper.users
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -35,10 +36,12 @@ test('blogs have a property "id" instead of "_id"', async () => {
 
 describe('new blog posts', () => {
   let bearer
+  const user = initialUsers[1]
+
   beforeEach(async () => {
     const loginResponse = await api
       .post('/api/login')
-      .send({ username: 'mike', password: 'mike' })
+      .send({ username: user.username, password: 'mike' })
     bearer = `Bearer ${loginResponse.body.token}`
   })
 
@@ -60,6 +63,7 @@ describe('new blog posts', () => {
     expect(blogsAfterSaving).toHaveLength(initialBlogs.length + 1)
 
     expect(response.body).toMatchObject(newBlog)
+    expect(response.body).toHaveProperty('user', user._id)
   })
 
   test('new blog with no "likes" property defaults to 0 likes', async () => {
