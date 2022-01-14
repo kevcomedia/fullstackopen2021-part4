@@ -204,24 +204,18 @@ describe('deleting a blog', () => {
 
   test('api responds with 204', async () => {
     const blogsAtStart = await testHelper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const blogToDelete = initialBlogs[1] // blog submitted by the test user
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${blogToDelete._id}`)
       .set('Authorization', bearer)
       .expect(204)
-  })
-
-  test('blog is no longer in database', async () => {
-    const blogsAtStart = await testHelper.blogsInDb()
-    const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
-
-    await api.delete(`/api/blogs/${blogToDelete.id}`)
 
     const blogsAtEnd = await testHelper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
-    expect(blogsAtEnd).not.toContainEqual(blogToDelete)
+    const blogsAtEndIds = blogsAtEnd.map((blog) => blog.id.toString())
+    expect(blogsAtEndIds).not.toContain(blogToDelete._id.toString())
   })
 })
 
